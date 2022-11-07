@@ -26,18 +26,18 @@ with open(guildsdatapath, 'r') as f:
 OnlineServers = requests.get("https://api.wynncraft.com/public_api.php?action=onlinePlayers").json()
 
 def updateplayer_fdata(name):
-    pd = requests.get(f"https://api.wynncraft.com/v2/player/{name}/stats").json()
-    try:
-        data = pd["data"][0]
-    except:
-        return
-
     try:
         playerdata[name]
         if round(time.time())-playerdata[name]["lastUpdate"]<3600: 
             return
     except:
         pass
+    
+    pd = requests.get(f"https://api.wynncraft.com/v2/player/{name}/stats").json()
+    try:
+        data = pd["data"][0]
+    except:
+        return
 
     player_fdata = { 
         "lastUpdate": round(time.time()),
