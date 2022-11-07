@@ -1,0 +1,3 @@
+# wynncraft-player-data
+
+owo
