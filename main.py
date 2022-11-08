@@ -50,19 +50,19 @@ def updateplayer_fdata(name):
     if data["guild"]["name"]:
         player_fdata["guild"] = {"name": data["guild"]["name"],"rank": data["guild"]["rank"]}
         guildsdata[data["guild"]["name"]] = {"name": data["guild"]["name"]}
-    completed = {"dungeons": {}, "raids": {}}
+    leaderboard = {}
     for character in data["characters"]:
         for dungeon in data["characters"][character]["dungeons"]["list"]:
             try:
-                completed["dungeons"][dungeon["name"]] += dungeon["completed"]
+                leaderboard[dungeon["name"]] += dungeon["completed"]
             except:
-                completed["dungeons"][dungeon["name"]] = dungeon["completed"]
+                leaderboard[dungeon["name"]] = dungeon["completed"]
         for raid in data["characters"][character]["raids"]["list"]:
             try:
-                completed["raids"][raid["name"]] += raid["completed"]
+                leaderboard[raid["name"]] += raid["completed"]
             except:
-                completed["raids"][raid["name"]] = raid["completed"]
-    player_fdata["completed"] = completed
+                leaderboard[raid["name"]] = raid["completed"]
+    player_fdata["leaderboard"] = leaderboard
     playerdata[name] = player_fdata
     time.sleep(0.05)
 
