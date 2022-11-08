@@ -68,9 +68,9 @@ def updateplayer_fdata(name):
             except:
                 player_fdata["stats"][raid["name"]] = raid["completed"]
         player_fdata["stats"]["mobsKilled"] += data["characters"][character]["mobsKilled"]
-        player_fdata["stats"]["mobsKilled"] += data["characters"][character]["blocksWalked"]
-        player_fdata["stats"]["mobsKilled"] += data["characters"][character]["logins"]
-        player_fdata["stats"]["mobsKilled"] += data["characters"][character]["deaths"]
+        # player_fdata["stats"]["mobsKilled"] += data["characters"][character]["blocksWalked"]
+        # player_fdata["stats"]["mobsKilled"] += data["characters"][character]["logins"]
+        # player_fdata["stats"]["mobsKilled"] += data["characters"][character]["deaths"]
     playerdata[name] = player_fdata
     time.sleep(0.05)
 
