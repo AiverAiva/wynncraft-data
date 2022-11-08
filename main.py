@@ -74,8 +74,6 @@ def updateplayer_fdata(name):
     playerdata[name] = player_fdata
     time.sleep(0.05)
 
-# updateplayer_fdata("Lotting")
-# updateplayer_fdata("nip_nop")
 for server in OnlineServers:
     for player in OnlineServers[server]:
         updateplayer_fdata(player)
