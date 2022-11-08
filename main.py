@@ -74,11 +74,13 @@ def updateplayer_fdata(name):
     playerdata[name] = player_fdata
     time.sleep(0.05)
 
-for server in OnlineServers:
-    for player in OnlineServers[server]:
-        updateplayer_fdata(player)
-    with open(playerdatapath, 'w') as f:
-        json.dump(playerdata, f)
-    with open(guildsdatapath, 'w') as f:
-        json.dump(guildsdata, f)
+updateplayer_fdata("Lotting")
+updateplayer_fdata("nip_nop")
+# for server in OnlineServers:
+#     for player in OnlineServers[server]:
+#         updateplayer_fdata(player)
+#     with open(playerdatapath, 'w') as f:
+#         json.dump(playerdata, f)
+#     with open(guildsdatapath, 'w') as f:
+#         json.dump(guildsdata, f)
 
