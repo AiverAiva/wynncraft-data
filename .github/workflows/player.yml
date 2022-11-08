@@ -5,7 +5,7 @@ name: wynncraft player data update
 
 on:
   schedule:
-    - cron:  '0,10,20,30,40,50 * * * *'
+    - cron:  '0,30 * * * *'
 #   push:
 #     branches:    
 #       - 'master'
