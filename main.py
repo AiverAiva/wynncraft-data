@@ -26,12 +26,12 @@ with open(guildsdatapath, 'r') as f:
 OnlineServers = requests.get("https://api.wynncraft.com/public_api.php?action=onlinePlayers").json()
 
 def updateplayer_fdata(name):
-    try:
-        playerdata[name]
-        if round(time.time())-playerdata[name]["lastUpdate"]<3600: 
-            return
-    except:
-        pass
+    # try:
+    #     playerdata[name]
+    #     if round(time.time())-playerdata[name]["lastUpdate"]<3600: 
+    #         return
+    # except:
+    #     pass
     
     pd = requests.get(f"https://api.wynncraft.com/v2/player/{name}/stats").json()
     try:
@@ -43,26 +43,34 @@ def updateplayer_fdata(name):
         "lastUpdate": round(time.time()),
         "username": data["username"],
         # "server": data["meta"]["location"]["server"],
-        "playtime": data["meta"]["playtime"],
         "rank": data["meta"]["tag"]["value"],
-        "veteran": data["meta"]["veteran"]
+        "veteran": data["meta"]["veteran"],
+        "stats": {
+            "playtime": data["meta"]["playtime"],
+            "mobsKilled": 0,
+            "blocksWalked": 0,
+            "logins": 0,
+            "deaths": 0
+        }
     }
     if data["guild"]["name"]:
         player_fdata["guild"] = {"name": data["guild"]["name"],"rank": data["guild"]["rank"]}
         guildsdata[data["guild"]["name"]] = {"name": data["guild"]["name"]}
-    leaderboard = {}
     for character in data["characters"]:
         for dungeon in data["characters"][character]["dungeons"]["list"]:
             try:
-                leaderboard[dungeon["name"]] += dungeon["completed"]
+                player_fdata["stats"][dungeon["name"]] += dungeon["completed"]
             except:
-                leaderboard[dungeon["name"]] = dungeon["completed"]
+                player_fdata["stats"][dungeon["name"]] = dungeon["completed"]
         for raid in data["characters"][character]["raids"]["list"]:
             try:
-                leaderboard[raid["name"]] += raid["completed"]
+                player_fdata["stats"][raid["name"]] += raid["completed"]
             except:
-                leaderboard[raid["name"]] = raid["completed"]
-    player_fdata["leaderboard"] = leaderboard
+                player_fdata["stats"][raid["name"]] = raid["completed"]
+        player_fdata["stats"]["mobsKilled"] += data["characters"][character]["mobsKilled"]
+        player_fdata["stats"]["mobsKilled"] += data["characters"][character]["blocksWalked"]
+        player_fdata["stats"]["mobsKilled"] += data["characters"][character]["logins"]
+        player_fdata["stats"]["mobsKilled"] += data["characters"][character]["deaths"]
     playerdata[name] = player_fdata
     time.sleep(0.05)
 
