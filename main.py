@@ -47,10 +47,10 @@ def updateplayer_fdata(name):
         "veteran": data["meta"]["veteran"],
         "stats": {
             "playtime": data["meta"]["playtime"],
-            "mobsKilled": 0,
-            "blocksWalked": 0,
-            "logins": 0,
-            "deaths": 0
+            # "mobsKilled": 0,
+            # "blocksWalked": 0,
+            # "logins": 0,
+            # "deaths": 0
         }
     }
     if data["guild"]["name"]:
