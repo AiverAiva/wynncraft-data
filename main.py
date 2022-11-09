@@ -67,7 +67,7 @@ def updateplayer_fdata(name):
                 player_fdata["stats"][raid["name"]] += raid["completed"]
             except:
                 player_fdata["stats"][raid["name"]] = raid["completed"]
-        player_fdata["stats"]["mobsKilled"] += data["characters"][character]["mobsKilled"]
+        # player_fdata["stats"]["mobsKilled"] += data["characters"][character]["mobsKilled"]
         # player_fdata["stats"]["mobsKilled"] += data["characters"][character]["blocksWalked"]
         # player_fdata["stats"]["mobsKilled"] += data["characters"][character]["logins"]
         # player_fdata["stats"]["mobsKilled"] += data["characters"][character]["deaths"]
