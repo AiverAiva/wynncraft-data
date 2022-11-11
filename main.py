@@ -46,7 +46,7 @@ def updateplayer_fdata(name):
         "rank": data["meta"]["tag"]["value"],
         "veteran": data["meta"]["veteran"],
         "stats": {
-            "playtime": data["meta"]["playtime"],
+            "playtime": round((int(data["meta"]["playtime"])*4.7)/60),
             # "mobsKilled": 0,
             # "blocksWalked": 0,
             # "logins": 0,
