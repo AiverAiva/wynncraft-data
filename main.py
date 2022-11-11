@@ -57,10 +57,11 @@ def updateplayer_fdata(name):
     if data["guild"]["name"]:
         player_fdata["guild"] = {"name": data["guild"]["name"],"rank": data["guild"]["rank"]}
         guildsdata[data["guild"]["name"]] = {"name": data["guild"]["name"]}
+    print(data["username"])
     for character in data["characters"]:
         cdata = data["characters"][character]
         player_fdata["classes"][character] = {"type": cdata["type"], "blocksWalked": cdata["blocksWalked"], "playtime": cdata["playtime"]}
-        # print(player_fdata["classes"][character])
+        print(player_fdata["classes"][character])
         for dungeon in data["characters"][character]["dungeons"]["list"]:
             try:
                 player_fdata["stats"][dungeon["name"]] += dungeon["completed"]
