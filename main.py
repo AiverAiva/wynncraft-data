@@ -45,18 +45,22 @@ def updateplayer_fdata(name):
         # "server": data["meta"]["location"]["server"],
         "rank": data["meta"]["tag"]["value"],
         "veteran": data["meta"]["veteran"],
+        "playtime": round((int(data["meta"]["playtime"])*4.7)/60),
         "stats": {
-            "playtime": round((int(data["meta"]["playtime"])*4.7)/60),
             # "mobsKilled": 0,
             # "blocksWalked": 0,
             # "logins": 0,
             # "deaths": 0
-        }
+        },
+        "classes": {}
     }
     if data["guild"]["name"]:
         player_fdata["guild"] = {"name": data["guild"]["name"],"rank": data["guild"]["rank"]}
         guildsdata[data["guild"]["name"]] = {"name": data["guild"]["name"]}
     for character in data["characters"]:
+        cdata = data["characters"][character]
+        player_fdata["classes"][character] = {"type": cdata["type"], "blocksWalked": cdata["blocksWalked"], "playtime": cdata["playtime"]}
+        print(player_fdata["classes"][character])
         for dungeon in data["characters"][character]["dungeons"]["list"]:
             try:
                 player_fdata["stats"][dungeon["name"]] += dungeon["completed"]
