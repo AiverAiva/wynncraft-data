@@ -26,13 +26,13 @@ with open(guildsdatapath, 'r') as f:
 OnlineServers = requests.get("https://api.wynncraft.com/public_api.php?action=onlinePlayers").json()
 
 def updateplayer_fdata(name):
-    try:
-        playerdata[name]
-        if round(time.time())-playerdata[name]["lastUpdate"]<3600: 
-            print("pass")
-            return
-    except:
-        pass
+    # try:
+    #     playerdata[name]
+    #     if round(time.time())-playerdata[name]["lastUpdate"]<3600: 
+    #         # print("pass")
+    #         return
+    # except:
+    #     pass
     
     pd = requests.get(f"https://api.wynncraft.com/v2/player/{name}/stats").json()
     try:
@@ -58,13 +58,13 @@ def updateplayer_fdata(name):
     if data["guild"]["name"]:
         player_fdata["guild"] = {"name": data["guild"]["name"],"rank": data["guild"]["rank"]}
         guildsdata[data["guild"]["name"]] = {"name": data["guild"]["name"]}
-    print(data["username"])
+    # print(data["username"])
     for character in data["characters"]:
         cdata = data["characters"][character]
         #min=i if i<j else j
         a = cdata["blocksWalked"] if cdata["blocksWalked"]>0 else int(cdata["blocksWalked"])+(1 << 32)
         player_fdata["classes"][character] = {"type": cdata["type"], "blocksWalked": a, "playtime": cdata["playtime"]}
-        print(player_fdata["classes"][character])
+        # print(player_fdata["classes"][character])
         for dungeon in data["characters"][character]["dungeons"]["list"]:
             try:
                 player_fdata["stats"][dungeon["name"]] += dungeon["completed"]
