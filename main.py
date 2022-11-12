@@ -68,7 +68,7 @@ def updateplayer_fdata(name):
         player_fdata["questsCompleted"] += cdata["quests"]["completed"]
         player_fdata["raidsCompleted"] += cdata["raids"]["completed"]
         player_fdata["dungeonsCompleted"] += cdata["dungeons"]["completed"]
-        player_fdata["classes"][character] = {"type": cdata["type"], "combatLevel": cdata["professions"]["combat"], "blocksWalked": cdata["blocksWalked"], "playtime": cdata["playtime"]}
+        player_fdata["classes"][character] = {"type": cdata["type"], "combatLevel": cdata["professions"]["combat"]["level"], "blocksWalked": cdata["blocksWalked"], "playtime": cdata["playtime"]}
         # print(player_fdata["classes"][character])
         for dungeon in cdata["dungeons"]["list"]:
             try:
