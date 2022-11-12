@@ -60,9 +60,7 @@ def updateplayer_fdata(name):
     # print(data["username"])
     for character in data["characters"]:
         cdata = data["characters"][character]
-        #min=i if i<j else j
-        a = cdata["blocksWalked"] if cdata["blocksWalked"]>0 else int(cdata["blocksWalked"])+(1 << 32)
-        player_fdata["classes"][character] = {"type": cdata["type"], "blocksWalked": a, "playtime": cdata["playtime"]}
+        player_fdata["classes"][character] = {"type": cdata["type"], "blocksWalked": cdata["blocksWalked"], "playtime": cdata["playtime"]}
         # print(player_fdata["classes"][character])
         for dungeon in data["characters"][character]["dungeons"]["list"]:
             try:
