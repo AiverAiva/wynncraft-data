@@ -46,6 +46,8 @@ def updateplayer_fdata(name):
         "rank": data["meta"]["tag"]["value"],
         "veteran": data["meta"]["veteran"],
         "playtime": round((int(data["meta"]["playtime"])*4.7)/60),
+        "totalLevel": data["global"]["totalLevel"],
+        "questsCompleted": 0,
         "stats": {
             # "mobsKilled": 0,
             # "blocksWalked": 0,
@@ -60,14 +62,15 @@ def updateplayer_fdata(name):
     # print(data["username"])
     for character in data["characters"]:
         cdata = data["characters"][character]
+        player_fdata["questsCompleted"] += cdata["quests"]["completed"]
         player_fdata["classes"][character] = {"type": cdata["type"], "blocksWalked": cdata["blocksWalked"], "playtime": cdata["playtime"]}
         # print(player_fdata["classes"][character])
-        for dungeon in data["characters"][character]["dungeons"]["list"]:
+        for dungeon in cdata["dungeons"]["list"]:
             try:
                 player_fdata["stats"][dungeon["name"]] += dungeon["completed"]
             except:
                 player_fdata["stats"][dungeon["name"]] = dungeon["completed"]
-        for raid in data["characters"][character]["raids"]["list"]:
+        for raid in cdata["raids"]["list"]:
             try:
                 player_fdata["stats"][raid["name"]] += raid["completed"]
             except:
