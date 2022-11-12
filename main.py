@@ -47,7 +47,7 @@ def updateplayer_fdata(name):
         "veteran": data["meta"]["veteran"],
         "playtime": round((int(data["meta"]["playtime"])*4.7)/60),
         "blocksWalked": data["global"]["blocksWalked"],
-        "totalLevel": data["global"]["totalLevel"],
+        "totalLevel": data["global"]["totalLevel"]["combined"],
         "questsCompleted": 0,
         "raidsCompleted": 0,
         "dungeonsCompleted": 0,
