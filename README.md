@@ -1,3 +1,3 @@
 # wynncraft-player-data
 
-owo
+Find an efficient way to deal with the data
