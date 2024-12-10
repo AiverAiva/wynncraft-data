@@ -1,0 +1,38 @@
+name: crawl data
+on:
+  schedule:
+    - cron: '*/10 * * * *' 
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+
+jobs:
+  update_and_run_guild:
+    runs-on: ubuntu-latest
+
+    env:
+      MONGODB_URI: ${{ secrets.MONGODB_URI }} # Secret to store MongoDB URI
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run update_last_seen.py
+      env:
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      run: |
+        python update_last_seen.py
+
+    - name: Run player.py
+      env:
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      run: |
+        python player.py

@@ -145,19 +145,16 @@ def extract_members(guild_data):
     return members
 
 
-def process_all_guilds():
+def process_all_guilds(guild_list):
     """Process all guilds from the guild list."""
     try:
         # Step 1: Fetch the list of all guilds
-        guild_list = fetch_guild_list()
-
         if not guild_list:
             print("No guilds found in the guild list.")
             return
 
         total_guilds = len(guild_list)
         print(f"Total guilds to process: {total_guilds}")
-
         for guild_name, guild_info in guild_list.items():
             try:
                 print(f"\nProcessing guild: {guild_name} (UUID: {guild_info['uuid']})")
@@ -184,4 +181,4 @@ def process_all_guilds():
 
 
 if __name__ == "__main__":
-    process_all_guilds()
+    process_all_guilds(fetch_guild_list())
