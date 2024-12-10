@@ -88,6 +88,7 @@ def detect_member_changes(old_data, new_data):
     old_members = extract_members(old_data)
     new_members = extract_members(new_data)
     guild_uuid = new_data.get('uuid', 'Unknown UUID')
+    guild_name = new_data.get('name', 'Unknown Name')
 
     # 1. Check for new members (join)
     for uuid, member in new_members.items():
@@ -96,7 +97,8 @@ def detect_member_changes(old_data, new_data):
                 'timestamp': int(time.time()),
                 'event': 'join',
                 'name': member['username'],
-                'guild_uuid': guild_uuid
+                'guild_uuid': guild_uuid,
+                'guild_name': guild_name
             }
             events_collection.insert_one(event)
             print(f"New member joined: {member['username']}")
@@ -109,6 +111,7 @@ def detect_member_changes(old_data, new_data):
                 'event': 'leave',
                 'name': member['username'],
                 'guild_uuid': guild_uuid,
+                'guild_name': guild_name,
                 'rank': member['rank']
             }
             events_collection.insert_one(event)
@@ -124,6 +127,7 @@ def detect_member_changes(old_data, new_data):
                     'event': 'rank_change',
                     'name': new_member['username'],
                     'guild_uuid': guild_uuid,
+                    'guild_name': guild_name,
                     'old_rank': old_member['rank'],
                     'new_rank': new_member['rank']
                 }
