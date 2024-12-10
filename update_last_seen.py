@@ -43,7 +43,7 @@ def update_last_seen_for_all_guilds(player_uuids):
     updated_count = 0
 
     for guild in guilds:
-        guild_name = guild.get('guild', 'Unknown Guild')
+        guild_name = guild.get('name', 'Unknown Guild')
         print(f"Processing guild: {guild_name}")
         
         # Extract members from the guild data
