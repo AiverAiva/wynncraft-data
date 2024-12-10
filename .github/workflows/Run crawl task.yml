@@ -5,7 +5,7 @@ on:
   workflow_dispatch: # Allows manual trigger from GitHub Actions UI
 
 jobs:
-  update_and_run_guild:
+  update_data:
     runs-on: ubuntu-latest
 
     env:
