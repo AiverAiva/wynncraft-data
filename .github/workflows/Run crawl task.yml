@@ -1,7 +1,7 @@
 name: crawl data
 on:
   schedule:
-    - cron: '*/30 * * * *' 
+    - cron: '*/20 * * * *' 
   workflow_dispatch: # Allows manual trigger from GitHub Actions UI
 
 jobs:
