@@ -96,7 +96,7 @@ def detect_member_changes(old_data, new_data):
             event = {
                 'timestamp': int(time.time()),
                 'event': 'join',
-                'uuid': new_member['uuid'],
+                'uuid': uuid,
                 'name': member['username'],
                 'guild_uuid': guild_uuid,
                 'guild_name': guild_name
@@ -110,7 +110,7 @@ def detect_member_changes(old_data, new_data):
             event = {
                 'timestamp': int(time.time()),
                 'event': 'leave',
-                'uuid': new_member['uuid'],
+                'uuid': uuid,
                 'name': member['username'],
                 'guild_uuid': guild_uuid,
                 'guild_name': guild_name,
@@ -127,7 +127,7 @@ def detect_member_changes(old_data, new_data):
                 event = {
                     'timestamp': int(time.time()),
                     'event': 'rank_change',
-                    'uuid': new_member['uuid'],
+                    'uuid': uuid,
                     'name': new_member['username'],
                     'guild_uuid': guild_uuid,
                     'guild_name': guild_name,
@@ -164,6 +164,11 @@ def process_all_guilds(guild_list):
         print(f"Total guilds to process: {total_guilds}")
         for guild_name, guild_info in guild_list.items():
             try:
+                guild_uuid = guild_info.get('uuid')
+                if not guild_uuid:
+                    print(f"Skipping guild '{guild_name}' due to missing UUID.")
+                    continue
+                
                 print(f"\nProcessing guild: {guild_name} (UUID: {guild_info['uuid']})")
 
                 # Step 2: Fetch the latest data for this guild

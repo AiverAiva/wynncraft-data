@@ -130,5 +130,4 @@ def process_all_players():
 
 if __name__ == "__main__":
     process_all_players()
-    print(collected_guild_uuids)
     process_all_guilds(collected_guild_uuids)
