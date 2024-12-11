@@ -1,11 +1,11 @@
-name: crawl data
+name: update last seen
 on:
   schedule:
-    - cron: '*/20 * * * *' 
+    - cron: '*/5 * * * *' 
   workflow_dispatch: # Allows manual trigger from GitHub Actions UI
 
 jobs:
-  update_data:
+  update_last_seen_data:
     runs-on: ubuntu-latest
 
     env:
@@ -25,8 +25,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run player.py
+    - name: Update last seen
       env:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
       run: |
-        python player.py
+        python update_last_seen.py
