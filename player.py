@@ -118,7 +118,7 @@ def process_all_players():
                 # Step 4: Collect unique guild UUID from the player data
                 collect_guild_uuid(player_data)
 
-                time.sleep(0.3)
+                time.sleep(0.2)
             except Exception as e:
                 print(f"An error occurred while processing UUID '{uuid}': {e}")
 
