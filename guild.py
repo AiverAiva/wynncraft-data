@@ -96,6 +96,7 @@ def detect_member_changes(old_data, new_data):
             event = {
                 'timestamp': int(time.time()),
                 'event': 'join',
+                'uuid': new_member['uuid'],
                 'name': member['username'],
                 'guild_uuid': guild_uuid,
                 'guild_name': guild_name
@@ -109,6 +110,7 @@ def detect_member_changes(old_data, new_data):
             event = {
                 'timestamp': int(time.time()),
                 'event': 'leave',
+                'uuid': new_member['uuid'],
                 'name': member['username'],
                 'guild_uuid': guild_uuid,
                 'guild_name': guild_name,
@@ -125,6 +127,7 @@ def detect_member_changes(old_data, new_data):
                 event = {
                     'timestamp': int(time.time()),
                     'event': 'rank_change',
+                    'uuid': new_member['uuid'],
                     'name': new_member['username'],
                     'guild_uuid': guild_uuid,
                     'guild_name': guild_name,
