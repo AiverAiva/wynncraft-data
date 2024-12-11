@@ -179,6 +179,8 @@ def process_all_guilds(guild_list):
 
                 # Step 5: Store or update the new guild data in MongoDB
                 store_guild_data(new_data)
+
+                time.sleep(0.2)
             except Exception as e:
                 print(f"An error occurred while processing guild '{guild_name}': {e}")
 
