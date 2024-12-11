@@ -131,4 +131,3 @@ def process_all_players():
 if __name__ == "__main__":
     process_all_players()
     process_all_guilds(collected_guild_uuids)
-    update_last_seen_for_guilds(collected_guild_uuids)

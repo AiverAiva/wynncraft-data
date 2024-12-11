@@ -1,6 +1,6 @@
 import requests
 import time
-from pymongo import MongoClient
+from pymongo import MongoClient, UpdateOne
 import os
 
 # Database configuration
@@ -32,39 +32,34 @@ def fetch_player_list():
         print(f"Error fetching player list: {e}")
         return set()
 
-
 def update_last_seen_for_guilds(guilds):
     player_uuids = fetch_player_list()
     if not player_uuids:
         print("No player UUIDs fetched. Exiting.")
         return
     
-    """Update the lastSeen field for all members in all guilds if their UUID is in the player list."""
     current_time = int(time.time())
-
-    # Find all guild documents in the guild_data collection
-    updated_count = 0
+    bulk_operations = []
 
     for guild in guilds:
-        guild_name = guild.get('name', 'Unknown Guild')
-        print(f"Processing guild: {guild_name}")
-        
-        # Extract members from the guild data
         members = extract_members(guild)
 
         for uuid, member in members.items():
             if uuid in player_uuids:
-                # Update the member's lastSeen field
-                update_result = guild_data_collection.update_one(
+                # Prepare update operation for each member
+                update_operation = UpdateOne(
                     {'_id': guild['_id'], f'members.{member["rank"]}.{uuid}.username': member['username']},
                     {'$set': {f'members.{member["rank"]}.{uuid}.lastSeen': current_time}}
                 )
-                
-                if update_result.modified_count > 0:
-                    updated_count += 1
-                    print(f"Updated lastSeen for {member['username']} (UUID: {uuid}) in guild {guild_name}")
-    
-    print(f"Total members updated: {updated_count}")
+                bulk_operations.append(update_operation)
+
+    try:
+        if bulk_operations:
+            result = guild_data_collection.bulk_write(bulk_operations)
+            updated_count = result.modified_count
+            print(f"Total members updated: {updated_count}")
+    except Exception as e:
+        print(f"Error during bulk update: {e}")
 
 
 def extract_members(guild_data):
@@ -82,8 +77,9 @@ def extract_members(guild_data):
 
 def main():
     try:
+        start_time = time.time()
         update_last_seen_for_guilds(guild_data_collection.find())
-        print("Finished updating lastSeen for all guild members.")
+        print("Finished updating lastSeen for all guild members. Operation took:", time.time() - start_time, "sec")
     except Exception as e:
         print(f"An error occurred: {e}")
 

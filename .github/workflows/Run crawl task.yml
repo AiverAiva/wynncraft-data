@@ -30,3 +30,9 @@ jobs:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
       run: |
         python player.py
+
+    - name: Update last seen
+      env:
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      run: |
+        python update_last_seen.py
