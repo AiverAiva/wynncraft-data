@@ -33,13 +33,16 @@ def fetch_player_list():
         return set()
 
 
-def update_last_seen_for_all_guilds(player_uuids):
+def update_last_seen_for_guilds(guilds):
+    player_uuids = fetch_player_list()
+    if not player_uuids:
+        print("No player UUIDs fetched. Exiting.")
+        return
+    
     """Update the lastSeen field for all members in all guilds if their UUID is in the player list."""
     current_time = int(time.time())
 
     # Find all guild documents in the guild_data collection
-    guilds = guild_data_collection.find()
-
     updated_count = 0
 
     for guild in guilds:
@@ -79,14 +82,7 @@ def extract_members(guild_data):
 
 def main():
     try:
-        # Step 1: Fetch the player list from Wynncraft API
-        player_uuids = fetch_player_list()
-        if not player_uuids:
-            print("No player UUIDs fetched. Exiting.")
-            return
-        
-        # Step 2: Update the lastSeen field for all members in all guilds
-        update_last_seen_for_all_guilds(player_uuids)
+        update_last_seen_for_guilds(guild_data_collection.find())
         print("Finished updating lastSeen for all guild members.")
     except Exception as e:
         print(f"An error occurred: {e}")

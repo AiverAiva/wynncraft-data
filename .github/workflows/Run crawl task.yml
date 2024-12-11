@@ -25,12 +25,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run update_last_seen.py
-      env:
-        MONGODB_URI: ${{ secrets.MONGODB_URI }}
-      run: |
-        python update_last_seen.py
-
     - name: Run player.py
       env:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
