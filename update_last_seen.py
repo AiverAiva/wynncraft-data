@@ -1,11 +1,15 @@
-import requests
-import time
-from pymongo import MongoClient, UpdateOne
 import os
+import time
+import asyncio
+import aiohttp
+from pymongo import MongoClient, UpdateOne
+from concurrent.futures import ThreadPoolExecutor
 
 # Database configuration
 DB_NAME = 'wynnpool'
 COLLECTION_GUILD_DATA = 'guild_data'
+COLLECTION_GUILD_LAST_SEEN = 'guild_last_seen'
+COLLECTION_GUILD_ONLINE_COUNT = 'guild_online_count'
 
 # API URL for Wynncraft player list
 PLAYER_API_URL = 'https://api.wynncraft.com/v3/player?identifier=uuid'
@@ -14,53 +18,108 @@ PLAYER_API_URL = 'https://api.wynncraft.com/v3/player?identifier=uuid'
 mongodb_uri = os.getenv('MONGODB_URI')
 client = MongoClient(mongodb_uri)
 db = client[DB_NAME]
-guild_data_collection = db[COLLECTION_GUILD_DATA]
+guild_last_seen_collection = db[COLLECTION_GUILD_LAST_SEEN]
+guild_online_count_collection = db[COLLECTION_GUILD_ONLINE_COUNT]
 
-
-def fetch_player_list():
-    """Fetch the player list from Wynncraft API."""
+async def fetch_player_list(session):
+    """Fetch the player list from Wynncraft API asynchronously."""
     try:
-        response = requests.get(PLAYER_API_URL, timeout=10)
-        if response.status_code == 200:
-            player_data = response.json()
-            player_uuids = set(player_data['players'].keys())
-            print(f"Fetched {len(player_uuids)} player UUIDs from Wynncraft API.")
-            return player_uuids
-        else:
-            raise Exception(f"Failed to fetch player list. Status code: {response.status_code}")
+        async with session.get(PLAYER_API_URL, timeout=10) as response:
+            if response.status == 200:
+                player_data = await response.json()
+                player_uuids = set(player_data['players'].keys())
+                print(f"Fetched {len(player_uuids)} player UUIDs from Wynncraft API.")
+                return player_uuids
+            else:
+                raise Exception(f"Failed to fetch player list. Status code: {response.status}")
     except Exception as e:
         print(f"Error fetching player list: {e}")
         return set()
 
-def update_last_seen_for_guilds(guilds):
-    player_uuids = fetch_player_list()
-    if not player_uuids:
-        print("No player UUIDs fetched. Exiting.")
-        return
-    
-    current_time = int(time.time())
-    bulk_operations = []
+async def process_guild(guild, player_uuids, current_time):
+    """Process each guild to prepare updates."""
+    guild_name = guild.get('name', 'Unknown')
+    guild_uuid = guild.get('uuid', 'Unknown')
+    members = extract_members(guild)
 
-    for guild in guilds:
-        members = extract_members(guild)
+    guild_last_seen_data = {
+        'guild_name': guild_name,
+        'guild_uuid': guild_uuid,
+        'members': {}
+    }
 
-        for uuid, member in members.items():
-            if uuid in player_uuids:
-                # Prepare update operation for each member
-                update_operation = UpdateOne(
-                    {'_id': guild['_id'], f'members.{member["rank"]}.{uuid}.username': member['username']},
-                    {'$set': {f'members.{member["rank"]}.{uuid}.lastSeen': current_time}}
-                )
-                bulk_operations.append(update_operation)
+    online_count = 0
 
-    try:
-        if bulk_operations:
-            result = guild_data_collection.bulk_write(bulk_operations)
-            updated_count = result.modified_count
-            print(f"Total members updated: {updated_count}")
-    except Exception as e:
-        print(f"Error during bulk update: {e}")
+    for uuid, member in members.items():
+        if uuid in player_uuids:
+            guild_last_seen_data['members'][uuid] = {'lastSeen': current_time}
+            online_count += 1
+            print(f"Updated lastSeen for member {member['username']} (UUID: {uuid}) in guild {guild_name}.")
 
+    last_seen_update = (guild_uuid, guild_last_seen_data) if guild_last_seen_data['members'] else None
+    online_count_update = {
+        'guild_name': guild_name,
+        'guild_uuid': guild_uuid,
+        'timestamp': current_time,
+        'count': online_count
+    } if online_count > 0 else None
+
+    return last_seen_update, online_count_update
+
+async def update_last_seen_and_online_count(guilds):
+    async with aiohttp.ClientSession() as session:
+        player_uuids = await fetch_player_list(session)
+        if not player_uuids:
+            print("No player UUIDs fetched. Exiting.")
+            return
+
+        current_time = int(time.time())
+        last_seen_updates = []
+        online_count_updates = []
+
+        # Prepare updates concurrently
+        tasks = []
+        for guild in guilds:
+            tasks.append(process_guild(guild, player_uuids, current_time))
+
+        results = await asyncio.gather(*tasks)
+
+        for last_seen_update, online_count_update in results:
+            if last_seen_update:
+                last_seen_updates.append(last_seen_update)
+            if online_count_update:
+                online_count_updates.append(online_count_update)
+
+        # Perform bulk updates
+        if last_seen_updates:
+            await run_in_executor(batch_update_last_seen, last_seen_updates)
+        if online_count_updates:
+            await run_in_executor(batch_insert_online_count, online_count_updates)
+
+async def run_in_executor(func, *args):
+    """Run a synchronous function in a thread pool executor."""
+    loop = asyncio.get_event_loop()
+    with ThreadPoolExecutor() as executor:
+        return await loop.run_in_executor(executor, func, *args)
+
+def batch_update_last_seen(updates):
+    """Batch update last seen data."""
+    operations = [UpdateOne({'guild_uuid': guild_uuid}, {'$set': data}, upsert=True) for guild_uuid, data in updates]
+    if operations:
+        try:
+            result = guild_last_seen_collection.bulk_write(operations)
+            print(f"Bulk updated last seen data for {result.modified_count} guilds.")
+        except Exception as e:
+            print(f"Error during bulk update of last seen data: {e}")
+
+def batch_insert_online_count(online_counts):
+    """Batch insert online count data."""
+    if online_counts:
+        try:
+            guild_online_count_collection.insert_many(online_counts)
+            print("Inserted online count data for multiple guilds.")
+        except Exception as e:
+            print(f"Error inserting online count data: {e}")
 
 def extract_members(guild_data):
     """Extract members as a flat list of users with their ranks."""
@@ -74,15 +133,14 @@ def extract_members(guild_data):
                 }
     return members
 
-
 def main():
     try:
         start_time = time.time()
-        update_last_seen_for_guilds(guild_data_collection.find())
-        print("Finished updating lastSeen for all guild members. Operation took:", time.time() - start_time, "sec")
+        guilds = list(db[COLLECTION_GUILD_DATA].find())  # Fetch all guilds once
+        asyncio.run(update_last_seen_and_online_count(guilds))
+        print("Finished updating lastSeen and online counts for all guilds. Operation took:", time.time() - start_time, "sec")
     except Exception as e:
         print(f"An error occurred: {e}")
-
 
 if __name__ == "__main__":
     main()
