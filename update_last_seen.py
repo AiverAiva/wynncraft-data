@@ -62,7 +62,7 @@ async def process_guild(guild, player_uuids, current_time):
         'guild_uuid': guild_uuid,
         'timestamp': current_time,
         'count': online_count
-    } if online_count > 0 else None
+    } 
 
     return last_seen_update, online_count_update
 
