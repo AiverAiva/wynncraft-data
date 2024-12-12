@@ -3,7 +3,6 @@ import requests
 import time
 from pymongo import MongoClient
 from guild import process_all_guilds
-from update_last_seen import update_last_seen_for_guilds
 
 # MongoDB connection
 mongodb_uri = os.getenv('MONGODB_URI')  # Get the MongoDB URI from environment variable
