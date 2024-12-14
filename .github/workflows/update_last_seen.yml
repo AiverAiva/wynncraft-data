@@ -1,7 +1,7 @@
 name: update last seen
 on:
-  # schedule:
-    # - cron: '*/5 * * * *'   #U STOP UNTIL I FINISH ALL
+  schedule:
+    - cron: '*/5 * * * *'   #U STOP UNTIL I FINISH ALL
   workflow_dispatch: # Allows manual trigger from GitHub Actions UI
 
 jobs:
