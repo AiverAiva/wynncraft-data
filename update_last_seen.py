@@ -136,19 +136,7 @@ def extract_members(guild_data):
 def delete_old_datasets():
     """Delete datasets older than 3 days."""
     three_days_ago = int(time.time()) - 3 * 24 * 60 * 60  # Calculate the timestamp for 3 days ago
-    
     try:
-        # Remove old records from the guild_last_seen collection
-        deleted_last_seen = guild_last_seen_collection.delete_many({
-            "members": {
-                "$exists": True
-            },
-            "$or": [
-                {"members.lastSeen": {"$lt": three_days_ago}}
-            ]
-        })
-        print(f"Deleted {deleted_last_seen.deleted_count} outdated records from guild_last_seen.")
-
         # Remove old records from the guild_online_count collection
         deleted_online_count = guild_online_count_collection.delete_many({
             "timestamp": {"$lt": three_days_ago}
