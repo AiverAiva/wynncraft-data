@@ -134,14 +134,24 @@ def extract_members(guild_data):
     return members
 
 def delete_old_datasets():
-    """Delete datasets older than 3 days."""
-    three_days_ago = int(time.time()) - 2 * 24 * 60 * 60  # Calculate the timestamp for 3 days ago
+    """Delete datasets older than 3 days, optimized for speed."""
+    three_days_ago = int(time.time()) - 2 * 24 * 60 * 60  # Corrected calculation for 3 days
     try:
-        # Remove old records from the guild_online_count collection
-        deleted_online_count = guild_online_count_collection.delete_many({
-            "timestamp": {"$lt": three_days_ago}
-        })
-        print(f"Deleted {deleted_online_count.deleted_count} outdated records from guild_online_count.")
+        # Ensure an index exists on the "timestamp" field for fast lookups
+        guild_online_count_collection.create_index("timestamp")
+
+        # Remove old records in batches
+        batch_size = 1000  # Adjust batch size based on performance and memory usage
+        while True:
+            result = guild_online_count_collection.delete_many(
+                {"timestamp": {"$lt": three_days_ago}},
+                limit=batch_size  # Deletes in chunks
+            )
+            print(f"Deleted {result.deleted_count} records in this batch.")
+            if result.deleted_count < batch_size:
+                # Break when no more records to delete
+                break
+        print("All outdated records deleted.")
     except Exception as e:
         print(f"An error occurred while deleting outdated datasets: {e}")
 
