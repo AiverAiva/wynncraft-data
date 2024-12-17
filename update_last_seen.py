@@ -138,8 +138,8 @@ def extract_members(guild_data):
     return members
 
 def delete_old_datasets():
-    """Delete datasets older than 3 days."""
-    three_days_ago = int(time.time()) - 2 * 24 * 60 * 60  # Calculate the timestamp for 3 days ago
+    """Delete datasets older than 14 days."""
+    three_days_ago = int(time.time()) - 14 * 24 * 60 * 60  # Calculate the timestamp for 14 days ago
     try:
         # Remove old records from the guild_online_count collection
         deleted_online_count = guild_online_count_collection.delete_many({
