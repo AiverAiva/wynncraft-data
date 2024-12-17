@@ -57,12 +57,16 @@ async def process_guild(guild, player_uuids, current_time):
             print(f"Updated lastSeen for member {member['username']} (UUID: {uuid}) in guild {guild_name}.")
 
     last_seen_update = (guild_uuid, guild_last_seen_data) if guild_last_seen_data['members'] else None
-    online_count_update = {
-        'guild_name': guild_name,
-        'guild_uuid': guild_uuid,
-        'timestamp': current_time,
-        'count': online_count
-    } 
+
+    # Only add online_count_update if online_count > 0
+    online_count_update = None
+    if online_count > 0:
+        online_count_update = {
+            'guild_name': guild_name,
+            'guild_uuid': guild_uuid,
+            'timestamp': current_time,
+            'count': online_count
+        }
 
     return last_seen_update, online_count_update
 
