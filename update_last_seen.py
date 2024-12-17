@@ -42,7 +42,7 @@ async def process_guild(guild, player_uuids, current_time):
     guild_uuid = guild.get('uuid', 'Unknown')
     members = extract_members(guild)
 
-    existing_data = await guild_last_seen_collection.find_one({'guild_uuid': guild_uuid})
+    existing_data = guild_last_seen_collection.find_one({'guild_uuid': guild_uuid})
 
     if existing_data:
         guild_last_seen_data = existing_data
