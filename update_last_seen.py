@@ -42,17 +42,11 @@ async def process_guild(guild, player_uuids, current_time):
     guild_uuid = guild.get('uuid', 'Unknown')
     members = extract_members(guild)
 
-    existing_data = guild_last_seen_collection.find_one({'guild_uuid': guild_uuid})
-
-    if existing_data:
-        guild_last_seen_data = existing_data
-    else:
-        # If no existing data, initialize a new guild structure
-        guild_last_seen_data = {
-            'guild_name': guild_name,
-            'guild_uuid': guild_uuid,
-            'members': {}
-        }
+    guild_last_seen_data = {
+        'guild_name': guild_name,
+        'guild_uuid': guild_uuid,
+        'members': {}
+    }
 
     online_count = 0
 
