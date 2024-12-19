@@ -36,17 +36,18 @@ async def fetch_player_list(session):
         print(f"Error fetching player list: {e}")
         return set()
 
-async def process_guild(guild, player_uuids, current_time):
+async def process_guild(guild, player_uuids, current_time, cached_last_seen_data):
     """Process each guild to prepare updates."""
     guild_name = guild.get('name', 'Unknown')
     guild_uuid = guild.get('uuid', 'Unknown')
     members = extract_members(guild)
 
-    guild_last_seen_data = {
+    # Use cached last seen data
+    guild_last_seen_data = cached_last_seen_data.get(guild_uuid, {
         'guild_name': guild_name,
         'guild_uuid': guild_uuid,
         'members': {}
-    }
+    })
 
     online_count = 0
 
@@ -80,10 +81,15 @@ async def update_last_seen_and_online_count(guilds):
         last_seen_updates = []
         online_count_updates = []
 
+        # Cache last seen data
+        cached_last_seen_data = {
+            data['guild_uuid']: data for data in guild_last_seen_collection.find()
+        }
+
         # Prepare updates concurrently
         tasks = []
         for guild in guilds:
-            tasks.append(process_guild(guild, player_uuids, current_time))
+            tasks.append(process_guild(guild, player_uuids, current_time, cached_last_seen_data))
 
         results = await asyncio.gather(*tasks)
 
@@ -92,12 +98,6 @@ async def update_last_seen_and_online_count(guilds):
                 last_seen_updates.append(last_seen_update)
             if online_count_update:
                 online_count_updates.append(online_count_update)
-
-        # Perform bulk updates
-        if last_seen_updates:
-            await run_in_executor(batch_update_last_seen, last_seen_updates)
-        if online_count_updates:
-            await run_in_executor(batch_insert_online_count, online_count_updates)
 
 async def run_in_executor(func, *args):
     """Run a synchronous function in a thread pool executor."""
