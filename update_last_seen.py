@@ -98,6 +98,11 @@ async def update_last_seen_and_online_count(guilds):
                 last_seen_updates.append(last_seen_update)
             if online_count_update:
                 online_count_updates.append(online_count_update)
+                
+    if last_seen_updates:
+        await run_in_executor(batch_update_last_seen, last_seen_updates)
+    if online_count_updates:
+        await run_in_executor(batch_insert_online_count, online_count_updates)
 
 async def run_in_executor(func, *args):
     """Run a synchronous function in a thread pool executor."""
