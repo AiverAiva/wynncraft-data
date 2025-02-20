@@ -1,5 +1,4 @@
-name: Keep GitHub Actions Active
-
+name: keepalive
 on:
   schedule:
     - cron: '0 0 * * 7'
@@ -11,11 +10,12 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
       - name: Update Timestamp
         run: |
-          date > keepalive.txt
+          date +%s > keepalive.txt
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add keepalive.txt
-          git commit -m "Keepalive update"
-          git push
+          git commit -m "Keepalive update $(date)" || echo "No changes to commit"
+          git push || echo "No changes to push"
