@@ -25,18 +25,30 @@ def fetch_api_data():
         print(f"Error fetching data from API: {e}")
         return {}
     
-def get_item_changelog(item_id):
-    """Fetch changelog for a specific item, sorted by timestamp in descending order."""
-    return list(changelog_collection.find({"itemName": item_id}).sort("timestamp", -1))
+def fetch_all_changelogs():
+    """Fetch all changelogs at once and store in a dictionary for quick lookup."""
+    changelog_data = {}
+    for entry in changelog_collection.find({}, {"_id": 0}):  # Fetch all fields except _id
+        item_name = entry["itemName"]
+        if item_name not in changelog_data:
+            changelog_data[item_name] = []
+        changelog_data[item_name].append(entry)
+
+    # Ensure all changelogs are sorted in descending order by timestamp
+    for key in changelog_data:
+        changelog_data[key].sort(key=lambda x: x["timestamp"], reverse=True)
+
+    return changelog_data
 
 def sync_items():
     # Fetch the latest data from the API
     api_data = fetch_api_data()
-
     if not api_data:
         print("No data retrieved from API.")
         return
 
+    print("Fetching changelog data in bulk...")
+    changelog_data = fetch_all_changelogs()
     print("Cleaning up the existing item data collection...")
     items_collection.delete_many({})  # Clears the collection
 
@@ -44,17 +56,17 @@ def sync_items():
     items_with_changelog = 0
 
     for item_id, details in api_data.items():
-        changelog = get_item_changelog(item_id)
-        item_data = { "id": item_id, **details }
-        if changelog:
-            item_data["changelog"] = changelog
-            items_with_changelog += 1
-        item_docs.append(item_data)
+        item_data = {"id": item_id, **details}
         
+        if item_id in changelog_data:
+            # item_data["changelog"] = changelog_data[item_id]
+            items_with_changelog += 1
+
+        item_docs.append(item_data)
 
     try:
         print("Inserting items into database...")
-        items_collection.insert_many(item_docs)
+        items_collection.insert_many(item_docs, ordered=False)  # Optimized bulk insert
         print(f"Item sync successful! {items_with_changelog} items have changelogs.")
     except BulkWriteError as e:
         print(f"Error inserting data: {e}")
