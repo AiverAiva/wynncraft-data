@@ -59,7 +59,7 @@ def sync_items():
         item_data = {"id": item_id, **details}
         
         if item_id in changelog_data:
-            # item_data["changelog"] = changelog_data[item_id]
+            item_data["changelog"] = changelog_data[item_id]
             items_with_changelog += 1
 
         item_docs.append(item_data)
