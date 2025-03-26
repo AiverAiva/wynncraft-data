@@ -70,16 +70,45 @@ def compare_items(previous_data, current_data, timestamp):
     # Check for modified items
     for item_id, item in current_data.items():
         if item_id in previous_data and item != previous_data[item_id]:
+            prev_item = previous_data[item_id]
+            curr_item = item
+
+            # Ensure both items are dictionaries before attempting key removal
+            if isinstance(prev_item, dict) and isinstance(curr_item, dict):
+                # Deep copy to avoid modifying the original data
+                temp_prev = prev_item.copy()
+                temp_curr = curr_item.copy()
+
+                # Safely remove customModelData if present
+                try:
+                    if (
+                        "icon" in temp_prev and "icon" in temp_curr and
+                        "value" in temp_prev["icon"] and "value" in temp_curr["icon"] and
+                        "customModelData" in temp_prev["icon"]["value"] and
+                        "customModelData" in temp_curr["icon"]["value"]
+                    ):
+                        del temp_prev["icon"]["value"]["customModelData"]
+                        del temp_curr["icon"]["value"]["customModelData"]
+                except (KeyError, TypeError):
+                    pass  # Ignore errors if the structure is incorrect
+
+                # If the items are now identical after ignoring customModelData, skip it
+                if temp_prev == temp_curr:
+                    continue
+
+            # Otherwise, register the modification
             item_change = {
                 "itemName": item_id,
                 "status": "modify",
                 "timestamp": timestamp,
-                "before": previous_data[item_id],
-                "after": item
+                "before": prev_item,
+                "after": curr_item
             }
             changes.append(item_change)
 
     return changes
+
+
 
 def main():
     try:
