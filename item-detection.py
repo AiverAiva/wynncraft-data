@@ -81,14 +81,10 @@ def compare_items(previous_data, current_data, timestamp):
 
                 # Safely remove customModelData if present
                 try:
-                    if (
-                        "icon" in temp_prev and "icon" in temp_curr and
-                        "value" in temp_prev["icon"] and "value" in temp_curr["icon"] and
-                        "customModelData" in temp_prev["icon"]["value"] and
-                        "customModelData" in temp_curr["icon"]["value"]
-                    ):
-                        del temp_prev["icon"]["value"]["customModelData"]
-                        del temp_curr["icon"]["value"]["customModelData"]
+                    if "icon" in temp_prev and "icon" in temp_curr:
+                        if "value" in temp_prev["icon"] and "value" in temp_curr["icon"]:
+                            temp_prev["icon"]["value"].pop("customModelData", None)
+                            temp_curr["icon"]["value"].pop("customModelData", None)
                 except (KeyError, TypeError):
                     pass  # Ignore errors if the structure is incorrect
 
@@ -131,7 +127,8 @@ def main():
 
         # Save the current data for future comparisons
         save_current_data(current_data)
-
+        print('New item datasets saved!')
+        
     except Exception as e:
         print(f"An error occurred: {e}")
 
