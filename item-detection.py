@@ -83,8 +83,9 @@ def compare_items(previous_data, current_data, timestamp):
                 try:
                     if "icon" in temp_prev and "icon" in temp_curr:
                         if "value" in temp_prev["icon"] and "value" in temp_curr["icon"]:
-                            temp_prev["icon"]["value"].pop("customModelData", None)
-                            temp_curr["icon"]["value"].pop("customModelData", None)
+                            if isinstance(temp_prev["icon"]["value"], dict) and isinstance(temp_curr["icon"]["value"], dict):
+                                temp_prev["icon"]["value"].pop("customModelData", None)
+                                temp_curr["icon"]["value"].pop("customModelData", None)
                 except (KeyError, TypeError):
                     pass  # Ignore errors if the structure is incorrect
 
