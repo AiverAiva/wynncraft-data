@@ -113,7 +113,7 @@ def process_all_players():
                     continue
 
                 # Step 3: Store or update player data in MongoDB
-                # store_or_update_player_data(player_data)
+                store_or_update_player_data(player_data)
 
                 # Step 4: Collect unique guild UUID from the player data
                 collect_guild_uuid(player_data)
