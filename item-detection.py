@@ -125,6 +125,7 @@ def main():
             # Insert changes into MongoDB
             item_changelog_collection.insert_many(changes)
             print(f"Stored {len(changes)} item changes into the database.")
+            print("CHANGES_FOUND")
 
         # Save the current data for future comparisons
         save_current_data(current_data)

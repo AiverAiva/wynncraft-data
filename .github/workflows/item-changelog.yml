@@ -1,15 +1,16 @@
 name: detect item changes
+
 on:
   schedule:
     - cron: '0 0 * * *'
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   detect_item_changes:
     runs-on: ubuntu-latest
 
     env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI }} # Secret to store MongoDB URI
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
 
     steps:
     - name: Checkout Repository
@@ -26,11 +27,20 @@ jobs:
         pip install -r requirements.txt
 
     - name: Detect item changes
+      id: detect_changes
       env:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
       run: |
-        python item-detection.py
-    
+        python item-detection.py > detect.log
+        echo "==== Detection Output ===="
+        cat detect.log
+        # 🆕 Check if detection script logged something like "CHANGES_FOUND"
+        if grep -q "CHANGES_FOUND" detect.log; then
+          echo "changes=true" >> $GITHUB_OUTPUT
+        else
+          echo "changes=false" >> $GITHUB_OUTPUT
+        fi
+
     - name: Update previous data
       run: |
         git config --global user.name "github-actions[bot]"
@@ -38,3 +48,14 @@ jobs:
         git add previous_item_data.json
         git commit -m "update previous_item_data.json" || echo "No changes to commit"
         git push || echo "No changes to push"
+
+    # 🆕 Only trigger changelog generation when there are actual changes
+    - name: Trigger changelog generation in Wynnpool
+      if: steps.detect_changes.outputs.changes == 'true'
+      run: |
+        echo "Triggering changelog generation in Wynnpool..."
+        curl -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.WYNNPOOL }}" \
+          https://api.github.com/repos/AiverAiva/Wynnpool/actions/workflows/generate-changelog.yml/dispatches \
+          -d '{"ref":"main"}'
