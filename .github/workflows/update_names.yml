@@ -1,4 +1,4 @@
-name: update leaderboard names
+name: update names
 on:
   schedule:
     - cron: '0 0 * * *'   # Runs daily at midnight UTC
@@ -30,3 +30,4 @@ jobs:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
       run: |
         python update-lb-name.py
+        python update-users-minecraft-name.py

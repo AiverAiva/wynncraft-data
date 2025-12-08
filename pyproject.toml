@@ -7,7 +7,7 @@ authors = [
 ]
 dependencies = [
     "pymongo",
-    "requests",
+    "requests>=2.32.4",
     "aiohttp",
 ]
 requires-python = "==3.13.*"
