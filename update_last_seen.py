@@ -38,37 +38,55 @@ async def fetch_player_list(session):
 
 async def process_guild(guild, player_uuids, current_time, cached_last_seen_data):
     """Process each guild to prepare updates."""
-    guild_name = guild.get('name', 'Unknown')
-    guild_uuid = guild.get('uuid', 'Unknown')
-    members = extract_members(guild)
+    try:
+        if not isinstance(guild, dict):
+            print(f"Error: Guild data is not a dictionary. Got {type(guild).__name__}. Skipping this guild.")
+            return None, None
 
-    # Use cached last seen data
-    guild_last_seen_data = cached_last_seen_data.get(guild_uuid, {
-        'guild_name': guild_name,
-        'guild_uuid': guild_uuid,
-        'members': {}
-    })
+        guild_name = guild.get('name', 'Unknown')
+        guild_uuid = guild.get('uuid', 'Unknown')
+        
+        # Validate guild data
+        if not guild_uuid or guild_uuid == 'Unknown':
+            print(f"Error: Guild missing valid UUID. Guild name: {guild_name}. Skipping this guild.")
+            return None, None
 
-    online_count = 0
+        members = extract_members(guild)
 
-    for uuid, member in members.items():
-        if uuid in player_uuids:
-            guild_last_seen_data['members'][uuid] = {'lastSeen': current_time}
-            online_count += 1
-            print(f"Updated lastSeen for member {member['username']} (UUID: {uuid}) in guild {guild_name}.")
-
-    last_seen_update = (guild_uuid, guild_last_seen_data) if guild_last_seen_data['members'] else None
-
-    online_count_update = None
-    if online_count > 0:
-        online_count_update = {
+        # Use cached last seen data
+        guild_last_seen_data = cached_last_seen_data.get(guild_uuid, {
             'guild_name': guild_name,
             'guild_uuid': guild_uuid,
-            'timestamp': current_time,
-            'count': online_count
-        }
+            'members': {}
+        })
 
-    return last_seen_update, online_count_update
+        online_count = 0
+
+        for uuid, member in members.items():
+            if uuid in player_uuids:
+                guild_last_seen_data['members'][uuid] = {'lastSeen': current_time}
+                online_count += 1
+                print(f"Updated lastSeen for member {member['username']} (UUID: {uuid}) in guild {guild_name}.")
+
+        last_seen_update = (guild_uuid, guild_last_seen_data) if guild_last_seen_data['members'] else None
+
+        online_count_update = None
+        if online_count > 0:
+            online_count_update = {
+                'guild_name': guild_name,
+                'guild_uuid': guild_uuid,
+                'timestamp': current_time,
+                'count': online_count
+            }
+
+        return last_seen_update, online_count_update
+    except Exception as e:
+        guild_name = guild.get('name', 'Unknown') if isinstance(guild, dict) else 'Unknown'
+        guild_uuid = guild.get('uuid', 'Unknown') if isinstance(guild, dict) else 'Unknown'
+        print(f"Error processing guild '{guild_name}' (UUID: {guild_uuid}): {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
+        return None, None
 
 async def update_last_seen_and_online_count(guilds):
     async with aiohttp.ClientSession() as session:
@@ -132,13 +150,33 @@ def batch_insert_online_count(online_counts):
 def extract_members(guild_data):
     """Extract members as a flat list of users with their ranks."""
     members = {}
-    for rank, rank_members in guild_data.get('members', {}).items():
-        if rank != 'total':  # Skip 'total' field
-            for uuid, member_data in rank_members.items():
-                members[uuid] = {
-                    'username': member_data.get('username'),
-                    'rank': rank
-                }
+    try:
+        if not isinstance(guild_data, dict):
+            print(f"Error: guild_data is not a dictionary. Got {type(guild_data).__name__}")
+            return members
+        
+        members_data = guild_data.get('members', {})
+        if not isinstance(members_data, dict):
+            print(f"Error: 'members' field is not a dictionary. Got {type(members_data).__name__}")
+            return members
+        
+        for rank, rank_members in members_data.items():
+            if rank != 'total':  # Skip 'total' field
+                if not isinstance(rank_members, dict):
+                    print(f"Warning: Rank '{rank}' data is not a dictionary. Skipping.")
+                    continue
+                for uuid, member_data in rank_members.items():
+                    if not isinstance(member_data, dict):
+                        print(f"Warning: Member data for UUID '{uuid}' is not a dictionary. Skipping.")
+                        continue
+                    members[uuid] = {
+                        'username': member_data.get('username'),
+                        'rank': rank
+                    }
+    except Exception as e:
+        print(f"Error extracting members from guild data: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
     return members
 
 def delete_old_datasets():
@@ -157,11 +195,14 @@ def main():
     try:
         start_time = time.time()
         guilds = list(db[COLLECTION_GUILD_DATA].find())  # Fetch all guilds once
+        print(f"Processing {len(guilds)} guilds...")
         asyncio.run(update_last_seen_and_online_count(guilds))
-        delete_old_datasets()  # Call the function to remove outdated datasetsjjjj
+        delete_old_datasets()  # Call the function to remove outdated datasets
         print("Finished updating lastSeen and online counts for all guilds. Operation took:", time.time() - start_time, "sec")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred: {type(e).__name__}: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
     main()
