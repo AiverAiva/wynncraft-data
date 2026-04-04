@@ -29,4 +29,4 @@ jobs:
       env:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
       run: |
-        python sync_aspects.py
+        python tasks/aspects/sync_aspects.py
