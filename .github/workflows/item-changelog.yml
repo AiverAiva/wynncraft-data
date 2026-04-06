@@ -11,6 +11,7 @@ jobs:
 
     env:
       MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      WYNNCRAFT_API_KEY: ${{ secrets.WYNNCRAFT_API_KEY }}
 
     steps:
     - name: Checkout Repository
@@ -30,6 +31,7 @@ jobs:
       id: detect_changes
       env:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        WYNNCRAFT_API_KEY: ${{ secrets.WYNNCRAFT_API_KEY }}
       run: |
         python item-detection.py > detect.log
         echo "==== Detection Output ===="

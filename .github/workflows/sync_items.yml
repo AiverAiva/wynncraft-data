@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI }} # Secret to store MongoDB URI
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      WYNNCRAFT_API_KEY: ${{ secrets.WYNNCRAFT_API_KEY }}
 
     steps:
     - name: Checkout Repository
@@ -28,5 +29,6 @@ jobs:
     - name: sync items
       env:
         MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        WYNNCRAFT_API_KEY: ${{ secrets.WYNNCRAFT_API_KEY }}
       run: |
         python sync_items.py
