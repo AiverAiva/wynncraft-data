@@ -4,11 +4,11 @@ from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
 
 # MongoDB connection setup
-DB_NAME = 'wynnpool'
-COLLECTION_ITEM = 'item_data'
-COLLECTION_CHANGELOG = 'item_changelog'
+DB_NAME = "wynnpool"
+COLLECTION_ITEM = "item_data"
+COLLECTION_CHANGELOG = "item_changelog"
 
-mongodb_uri = os.getenv('MONGODB_URI')  
+mongodb_uri = os.getenv("MONGODB_URI")
 client = MongoClient(mongodb_uri)
 db = client[DB_NAME]
 items_collection = db[COLLECTION_ITEM]
@@ -16,19 +16,34 @@ changelog_collection = db[COLLECTION_CHANGELOG]
 
 API_URL = "https://api.wynncraft.com/v3/item/database?fullResult"
 
+
 def fetch_api_data():
     try:
-        response = requests.get(API_URL)
+        api_key = os.getenv("WYNNCRAFT_API_KEY")
+        headers = {}
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
+
+        response = requests.get(API_URL, headers=headers)
         response.raise_for_status()  # Will raise an error for non-2xx status codes
-        return response.json()
+        data = response.json()
+        # API returns a list; index by internalName for consistent lookup
+        if isinstance(data, list):
+            return {
+                item["internalName"]: item for item in data if "internalName" in item
+            }
+        return data
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data from API: {e}")
         return {}
-    
+
+
 def fetch_all_changelogs():
     """Fetch all changelogs at once and store in a dictionary for quick lookup."""
     changelog_data = {}
-    for entry in changelog_collection.find({}, {"_id": 0}):  # Fetch all fields except _id
+    for entry in changelog_collection.find(
+        {}, {"_id": 0}
+    ):  # Fetch all fields except _id
         item_name = entry["itemName"]
         if item_name not in changelog_data:
             changelog_data[item_name] = []
@@ -39,6 +54,7 @@ def fetch_all_changelogs():
         changelog_data[key].sort(key=lambda x: x["timestamp"], reverse=True)
 
     return changelog_data
+
 
 def sync_items():
     # Fetch the latest data from the API
@@ -57,7 +73,7 @@ def sync_items():
 
     for item_id, details in api_data.items():
         item_data = {"id": item_id, **details}
-        
+
         if item_id in changelog_data:
             item_data["changelog"] = changelog_data[item_id]
             items_with_changelog += 1
@@ -70,6 +86,7 @@ def sync_items():
         print(f"Item sync successful! {items_with_changelog} items have changelogs.")
     except BulkWriteError as e:
         print(f"Error inserting data: {e}")
+
 
 if __name__ == "__main__":
     sync_items()

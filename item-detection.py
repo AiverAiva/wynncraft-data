@@ -3,8 +3,8 @@ from pymongo import MongoClient
 import requests
 import json
 import os
-from dotenv import load_dotenv
-load_dotenv()
+# from dotenv import load_dotenv
+# load_dotenv()
 
 # The URL of the Wynncraft API
 API_URL = "https://api.wynncraft.com/v3/item/database?fullResult"
