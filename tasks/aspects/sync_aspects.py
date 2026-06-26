@@ -32,7 +32,10 @@ def fetch_all_aspects(endpoints):
         try:
             res = requests.get(url)
             res.raise_for_status()
-            merged.update(res.json())
+            for aspect in res.json():
+                key = aspect.get("internalName")
+                if key:
+                    merged[key] = aspect
         except Exception as e:
             print(f"Failed to fetch {url}: {e}")
     return merged
