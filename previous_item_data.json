@@ -177231,6 +177231,9 @@
         "tier": "unique",
         "restriction": "none",
         "dropRestriction": "normal",
+        "elements": [
+            "air"
+        ],
         "requirements": {
             "level": 86
         },
