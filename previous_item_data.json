@@ -1906,7 +1906,7 @@
             "defence": 100
         },
         "majorIds": {
-            "Burnt Shadows": "<span class='font-ascii' style='color:#AAAAAA'>Buried Light burns faster and is controlled by the direction you face. Enemies in the light instead take <span class='font-ascii' style='color:#FF5555'><span class='font-common'>\ue002</span>120%</span>.</span></span>"
+            "Burnt Shadows": "<span class='font-ascii' style='color:#AAAAAA'>Buried Light has faster travel speed and damage, and is controlled by the direction you face. Enemies in the light instead take <span class='font-ascii' style='color:#FF5555'><span class='font-common'>\ue002</span>120%</span> and recieve 10% more damage.</span></span>"
         },
         "powderSlots": 4,
         "lore": "<span class='font-ascii' style='color:#AAAAAA'>What once crowned the Commander of Aelumia's Gendarmerie, now reduced to a singed fragment of its former self.</span>",
@@ -4857,7 +4857,7 @@
         "emblem": "diamond_6",
         "tier": "fabled",
         "attackSpeed": "veryFast",
-        "averageDps": 640,
+        "averageDps": 680,
         "restriction": "none",
         "dropRestriction": "never",
         "elements": [
@@ -9787,7 +9787,7 @@
             "dexterity": 53
         },
         "majorIds": {
-            "Uncertainty Principle": "<span class='font-ascii' style='color:#AAAAAA'>Arrow and Grape Bombs gain +1 radius and phase through enemies. Bouncing Bomb has decreased velocity and gains +1 bounces, and Grape Bombs gain increased randomness and +2 projectiles.</span>"
+            "Uncertainty Principle": "<span class='font-ascii' style='color:#AAAAAA'>\nArrow and Grape Bombs gain +1 radius and phase through enemies. Bouncing Bomb has decreased velocity and gains +1 bounces, and Grape Bombs gain increased randomness and +2 projectiles.</span>"
         },
         "powderSlots": 2,
         "lore": "<span class='font-ascii' style='color:#AAAAAA'>War does not bring destruction. With war comes chaos, and with chaos comes destruction.</span>",
@@ -21037,6 +21037,61 @@
             "baseAirDefence": 65,
             "baseEarthDefence": 90,
             "baseThunderDefence": 65
+        }
+    },
+    "Gift of Life": {
+        "displayName": "Gift of Life",
+        "internalName": "Gift of Life",
+        "type": "armour",
+        "subType": "helmet",
+        "icon": {
+            "value": {
+                "id": "minecraft:leather_helmet",
+                "name": "helmet.titanium",
+                "customModelData": {
+                    "rangeDispatch": [
+                        9
+                    ]
+                }
+            },
+            "format": "attribute"
+        },
+        "emblem": "shield_6",
+        "tier": "legendary",
+        "restriction": "untradable",
+        "dropRestriction": "never",
+        "identified": true,
+        "elements": [
+            "earth",
+            "thunder"
+        ],
+        "requirements": {
+            "level": 116,
+            "strength": 71,
+            "dexterity": 53
+        },
+        "powderSlots": 7,
+        "lore": "<span class='font-ascii' style='color:#AAAAAA'> \"Now, dance for me! Hehehahehah!\" </span>",
+        "identifications": {
+            "damage": 13,
+            "lifeSteal": 546,
+            "rawAgility": 1,
+            "rawDefence": 1,
+            "rawStrength": 1,
+            "earthDefence": 53,
+            "rawDexterity": 1,
+            "neutralDamage": 38,
+            "healthRegenRaw": -334,
+            "rawIntelligence": 1,
+            "mainAttackRange": 84
+        },
+        "base": {
+            "baseHealth": 3863,
+            "baseAirDefence": 78,
+            "baseFireDefence": 34,
+            "baseEarthDefence": 177,
+            "baseWaterDefence": 63,
+            "baseThunderDefence": 132
         }
     },
     "Grandstand": {
@@ -53380,7 +53435,7 @@
         "emblem": "diamond_6",
         "tier": "fabled",
         "attackSpeed": "slow",
-        "averageDps": 390,
+        "averageDps": 435,
         "restriction": "none",
         "dropRestriction": "normal",
         "elements": [
@@ -66521,6 +66576,66 @@
             }
         }
     },
+    "Ashes to Ashes": {
+        "displayName": "Ashes to Ashes",
+        "internalName": "Ashes to Ashes",
+        "type": "armour",
+        "subType": "leggings",
+        "icon": {
+            "value": {
+                "id": "minecraft:leather_leggings",
+                "name": "leggings.titanium",
+                "customModelData": {
+                    "rangeDispatch": [
+                        9
+                    ]
+                }
+            },
+            "format": "attribute"
+        },
+        "emblem": "shield_6",
+        "tier": "fabled",
+        "dropRestriction": "never",
+        "elements": [
+            "thunder"
+        ],
+        "requirements": {
+            "level": 106,
+            "dexterity": 75
+        },
+        "identifications": {
+            "damage": {
+                "min": 5,
+                "raw": 18,
+                "max": 23
+            },
+            "lifeSteal": {
+                "min": -520,
+                "raw": -400,
+                "max": -280
+            },
+            "rawDamage": {
+                "min": 51,
+                "raw": 169,
+                "max": 220
+            },
+            "rawDefence": -10,
+            "rawStrength": 12,
+            "1stSpellCost": {
+                "min": 26,
+                "raw": 20,
+                "max": 14
+            },
+            "rawAttackSpeed": 1,
+            "raw1stSpellCost": 1
+        },
+        "base": {
+            "baseHealth": 3200,
+            "baseEarthDefence": 195,
+            "baseWaterDefence": -130,
+            "baseThunderDefence": 90
+        }
+    },
     "Autumn's Call": {
         "displayName": "Autumn's Call",
         "internalName": "Autumn's Call",
@@ -68014,7 +68129,7 @@
         "emblem": "diamond_6",
         "tier": "fabled",
         "attackSpeed": "slow",
-        "averageDps": 841,
+        "averageDps": 828,
         "restriction": "none",
         "dropRestriction": "normal",
         "elements": [
@@ -74382,6 +74497,54 @@
                 "raw": 70,
                 "max": 130
             }
+        }
+    },
+    "Fearmonger": {
+        "displayName": "Fearmonger",
+        "internalName": "Fearmonger",
+        "type": "armour",
+        "subType": "boots",
+        "icon": {
+            "value": {
+                "id": "minecraft:leather_boots",
+                "name": "boots.diamond",
+                "customModelData": {
+                    "rangeDispatch": [
+                        8
+                    ]
+                }
+            },
+            "format": "attribute"
+        },
+        "emblem": "shield_5",
+        "tier": "legendary",
+        "restriction": "untradable",
+        "dropRestriction": "never",
+        "identified": true,
+        "elements": [
+            "thunder",
+            "air"
+        ],
+        "requirements": {
+            "level": 105,
+            "agility": 60,
+            "dexterity": 60
+        },
+        "lore": "<span class='font-ascii' style='color:#AAAAAA'> \"There's... nothing here?\" </span>",
+        "identifications": {
+            "knockback": 75,
+            "walkSpeed": 80,
+            "rawAttackSpeed": -30,
+            "rawIntelligence": -10,
+            "rawSpellDamage": -84213,
+            "mainAttackRange": -20,
+            "rawMainAttackDamage": 2700
+        },
+        "base": {
+            "baseHealth": -3300,
+            "baseAirDefence": -130,
+            "baseWaterDefence": -300,
+            "baseThunderDefence": -130
         }
     },
     "Fighter's Tome of Combat Mastery III": {
@@ -121732,7 +121895,7 @@
             "dexterity": 59
         },
         "majorIds": {
-            "Wormhole": "<span class='font-ascii' style='color:#AAAAAA'>Mirror and Shadow clones will cast Meteor with Last Laugh. Malicious Mockery causes Meteor to apply 13 Trick stacks.</span>"
+            "Wormhole": "<span class='font-ascii' style='color:#AAAAAA'>Clones instead cast Meteor with Last Laugh. Malicious Mockery causes Meteor to apply 13 Trick stacks.</span>"
         },
         "powderSlots": 1,
         "lore": "<span class='font-ascii' style='color:#AAAAAA'>After eons spent in parochial search for something familiar, perhaps this blade should have been a hint to think outside the box.</span>",
@@ -130136,7 +130299,7 @@
             "level": 95,
             "dexterity": 100
         },
-        "lore": "<span class='font-ascii' style='color:#AAAAAA'>The lethal amount of electricity emmited from this often desired necklace fails to kill you, as its pure energy runs through your veins.</span>",
+        "lore": "<span class='font-ascii' style='color:#AAAAAA'>The lethal amount of electricity emitted from this often desired necklace fails to kill you, as its pure energy runs through your veins.</span>",
         "dropMeta": {
             "name": "Legendary Island",
             "type": "challenge",
@@ -323213,6 +323376,51 @@
                 "raw": 32,
                 "max": 48
             }
+        }
+    },
+    "Last Rites": {
+        "displayName": "Last Rites",
+        "internalName": "Last Rites",
+        "type": "armour",
+        "subType": "boots",
+        "icon": {
+            "value": {
+                "id": "minecraft:leather_boots",
+                "name": "boots.pale_chainmail",
+                "customModelData": {
+                    "rangeDispatch": [
+                        12
+                    ]
+                }
+            },
+            "format": "attribute"
+        },
+        "emblem": "shield_3",
+        "tier": "rare",
+        "restriction": "untradable",
+        "dropRestriction": "never",
+        "identified": true,
+        "elements": [
+            "air"
+        ],
+        "requirements": {
+            "level": 52,
+            "agility": 35
+        },
+        "powderSlots": 2,
+        "lore": "<span class='font-ascii' style='color:#AAAAAA'>I         ,        ;                , t      o  '   l   d'       ;              y   ' o   u  ,                t    o   ' ,     .       ;    . s   , t      '     a .    y       ,         ;                                                              a  '     w   ;   ,a      . y</span>",
+        "identifications": {
+            "lifeSteal": 75,
+            "manaSteal": 8,
+            "reflection": 20,
+            "walkSpeed": -10,
+            "spellDamage": 20
+        },
+        "base": {
+            "baseHealth": 575,
+            "baseAirDefence": 20,
+            "baseWaterDefence": 20,
+            "baseThunderDefence": 20
         }
     },
     "Luminis": {
