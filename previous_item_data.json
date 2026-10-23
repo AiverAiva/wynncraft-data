@@ -43103,12 +43103,7 @@
         "icon": {
             "value": {
                 "id": "minecraft:potion",
-                "name": "dagger.fire3",
-                "customModelData": {
-                    "rangeDispatch": [
-                        836
-                    ]
-                }
+                "name": "dagger.fire3"
             },
             "format": "attribute"
         },
@@ -43127,7 +43122,7 @@
             "defence": 105
         },
         "majorIds": {
-            "Molten Rebirth": "<span class='font-ascii' style='color:#AAAAAA'>Harvester additionally restores 1.5% health per leftover mark, increasing to 3% with devour.</span>"
+            "Molten Rebirth": "<span class='font-ascii' style='color:#AAAAAA'>Harvester additionally restores 1.5% health per mark, increasing to 3% with devour.</span>"
         },
         "powderSlots": 3,
         "lore": "<span class='font-ascii' style='color:#AAAAAA'>The Dogun God Garaheth was actually an immense fire demon occupying the bowels of Molten Heights. Although unwise, the Dwarves forged a demonic dagger using his tooth in celebration of his slaughter.</span>",
