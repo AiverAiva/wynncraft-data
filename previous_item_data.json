@@ -83364,7 +83364,7 @@
             "intelligence": 45
         },
         "powderSlots": 2,
-        "lore": "<span class='font-ascii' style='color:#AAAAAA'>Sink into infinite synchronous beats with the intricate rhythm of fractals and spirals and patterns, and patterns, and patterns that reach to the pulsating stars and then back to the ground where the people are dancing to songs they don't know under stars that turn \u2018round, and around, and around, as the spiral is starting again . . .</span>",
+        "lore": "<span class='font-ascii' style='color:#AAAAAA'>Sink into infinite synchronous beats with the intricate rhythm of fractals and spirals and patterns, and patterns, and patterns that reach to the pulsating stars and then back to the ground where the people are dancing to songs they don't know under stars that turn 'round, and around, and around, as the spiral is starting again . . .</span>",
         "identifications": {
             "sprint": {
                 "min": 7,
@@ -118415,7 +118415,7 @@
         "majorIds": {
             "Dead Weight": "<span class='font-ascii' style='color:#AAAAAA'>Totem's horizontal velocity is greatly increased at the cost of vertical movement.</span>"
         },
-        "lore": "<span class='font-ascii' style='color:#AAAAAA'>A blacksmith\u2019s blow shapes steel - yours shape the very earth. Every strike is a hammerfall, leaving the ground dented and ringing like a struck anvil, its thud rolling deep through stone.</span>",
+        "lore": "<span class='font-ascii' style='color:#AAAAAA'>A blacksmith's blow shapes steel - yours shape the very earth. Every strike is a hammerfall, leaving the ground dented and ringing like a struck anvil, its thud rolling deep through stone.</span>",
         "dropMeta": {
             "name": "Sky Islands Exploration",
             "type": "lootrun",
@@ -197085,7 +197085,7 @@
             "Windsurf": "<span class='font-ascii' style='color:#AAAAAA'>Righting Reflex has 75% reduced fall speed, lasts twice as long, and is affected stronger by movement speed.</span>"
         },
         "powderSlots": 3,
-        "lore": "<span class='font-ascii' style='color:#AAAAAA'>Weightless as a fallen feather, yet lethal as a hawk\u2019s descent. Its beveled edge reshapes the slipstream to cradle your form, tugging you through the air as you deliver strike after strike, movements blurring into a flurry of beating wings.</span>",
+        "lore": "<span class='font-ascii' style='color:#AAAAAA'>Weightless as a fallen feather, yet lethal as a hawk's descent. Its beveled edge reshapes the slipstream to cradle your form, tugging you through the air as you deliver strike after strike, movements blurring into a flurry of beating wings.</span>",
         "identifications": {
             "airDamage": {
                 "min": 9,
@@ -307425,12 +307425,7 @@
         "icon": {
             "value": {
                 "id": "minecraft:potion",
-                "name": "relik.thunder2",
-                "customModelData": {
-                    "rangeDispatch": [
-                        3804
-                    ]
-                }
+                "name": "relik.thunder2"
             },
             "format": "attribute"
         },
@@ -307452,7 +307447,7 @@
             "Seeking Totem": "<span class='font-ascii' style='color:#AAAAAA'>Totem moves towards you when wearing Mask of the Heretic.</span>"
         },
         "powderSlots": 2,
-        "lore": "<span class='font-ascii' style='color:#AAAAAA'>They didn\u2019t follow you this far to watch you survive.</span>",
+        "lore": "<span class='font-ascii' style='color:#AAAAAA'>They didn't follow you this far to watch you survive.</span>",
         "identifications": {
             "thorns": {
                 "min": 7,
