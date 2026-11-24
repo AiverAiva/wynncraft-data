@@ -6,7 +6,7 @@ on:
 
 jobs:
   sync_items:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     env:
       MONGODB_URI: ${{ secrets.MONGODB_URI }}
@@ -14,12 +14,12 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v5
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v6
       with:
-        python-version: '3.9'
+        python-version: '3.12'
 
     - name: Install Dependencies
       run: |
